@@ -15,8 +15,9 @@ pygame.display.set_caption("Zombie War")
 
 class house(pygame.sprite.Sprite):
     image = None
-    def __init__(self, photo):
+    def __init__(self):
         super().__init__()
+        
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         self.image = pygame.Surface([50, 40])
@@ -25,10 +26,15 @@ class house(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 425
         self.rect.y = 300
+    def update(self, val, val2):
         if house.image is None:
-            house.image = pygame.image.load(photo)
-        self.image = house.image
-
+           house.image = pygame.image.load('hou.png')
+           
+        if val <= 0:
+            self.image = house.image
+        else:
+            self.image = pygame.image.load('redhou.png')
+        
 class house1(pygame.sprite.Sprite):
     image = None
     def __init__(self):
@@ -41,9 +47,14 @@ class house1(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 50
         self.rect.y = 300
-        if house.image is None:
-            house.image = pygame.image.load('hou.png')
-        self.image = house.image
+    def update(self, val, val2):
+        if house1.image is None:
+           house1.image = pygame.image.load('hou.png')
+           
+        if val2 <= 0:
+            self.image = house1.image
+        else:
+            self.image = pygame.image.load('redhou.png')
         
 class house2(pygame.sprite.Sprite):
     image = None
@@ -60,7 +71,21 @@ class house2(pygame.sprite.Sprite):
         if house2.image is None:
             house2.image = pygame.image.load('hou.png')
         self.image = house2.image
-            
+class house3(pygame.sprite.Sprite):
+    image = None
+    def __init__(self):
+        super().__init__()
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        self.image = pygame.Surface([130, 60])
+        self.image.fill(red)
+ 
+        self.rect = self.image.get_rect()
+        self.rect.x = 240
+        self.rect.y = 100
+        if house3.image is None:
+            house3.image = pygame.image.load('bluehou.png')
+        self.image = house3.image
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
     return textSurface, textSurface.get_rect()
@@ -100,7 +125,7 @@ class zombieupright(pygame.sprite.Sprite):
         self.rect.x = 370
         self.rect.y = 550
 
-    def update(self):
+    def update(self, val, val2):
         self.rect.x += 1
         self.rect.y -= 3
 
@@ -113,7 +138,7 @@ class zombieupleft(pygame.sprite.Sprite):
         self.rect.x = 180
         self.rect.y = 550
 
-    def update(self):
+    def update(self, val, val2):
         self.rect.x -= 1
         self.rect.y -= 3
         
@@ -148,21 +173,22 @@ def game(crashed):
     photo = 'hou.png'
     clock = pygame.time.Clock()
     crashed = True
+    pop2z = 0
     zombieg = pygame.sprite.Group()
     allsprites = pygame.sprite.Group()
-    h2 = house(photo)
+    h2 = house()
     h1 = house1()
     h = house2()
+    h3 = house3()
     houses = pygame.sprite.Group()
     pop = 5
-    pop2z = 0
     pop1z = 0
     clicked = []
     hou2 = []
     hou1 = []
     while crashed:
         gdisplay.fill(white)
-        allsprites.add(h,h2,h1)
+        allsprites.add(h,h2,h1,h3)
         milliseconds = int(pygame.time.get_ticks())
         seconds = int(pygame.time.get_ticks() / 1000)
         mouse = pygame.mouse.get_pos()
@@ -175,10 +201,10 @@ def game(crashed):
         if 240+100 > mouse[0] > 240 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
                 clicked.append(h)
-        if 425+100 > mouse[0] > 425 and 300+50 > mouse[1] > 300:
+        if 425+100 > mouse[0] > 425 and 300+50 > mouse[1] > 300 and h in clicked:
             if click == (1,0,0):
                 hou2.append(h2)
-        if 50+100 > mouse[0] > 50 and 300+50 > mouse[1] > 300:
+        if 50+100 > mouse[0] > 50 and 300+50 > mouse[1] > 300 and h in clicked:
             if click == (1,0,0):
                 hou1.append(h1)
                        
@@ -194,26 +220,29 @@ def game(crashed):
                 zombieg.add(zomb1)
                 allsprites.add(zomb1)
                 pop -= 1
-        if pop2z > 0:
-            photo = 'redhou.png'
         
-           
-        zombieg.update()
-        allsprites.update()
+        
+        zombieg.update(pop2z, pop1z)
+        allsprites.update(pop2z, pop1z)
         allsprites.draw(gdisplay)
         zombieg.draw(gdisplay)
         for zomb in zombieg:
             allsprites.remove(zomb)
+            allsprites.remove(h,h1)
             if pygame.sprite.spritecollide(zomb, allsprites, False):
                 zombieg.remove(zomb)
                 allsprites.remove(zomb)
                 pop2z += 1
+                
         for zomb1 in zombieg:
+            allsprites.add(h,h1)
+            allsprites.remove(h,h2)
             allsprites.remove(zomb1)
             if pygame.sprite.spritecollide(zomb1, allsprites, False):
                 zombieg.remove(zomb1)
                 allsprites.remove(zomb1)
                 pop1z += 1
+                
         pygame.display.flip()
     clock.tick(60)
     
