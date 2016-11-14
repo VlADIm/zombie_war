@@ -1,0 +1,12 @@
+{
+    "john": {
+        "strength": 4,
+        "r_rate": 2,
+        "speed": 5
+    },
+    "evan": {
+        "strength": 1,
+        "r_rate": 2,
+        "speed": 1
+    }
+}
