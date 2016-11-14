@@ -26,7 +26,7 @@ class house(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 425
         self.rect.y = 300
-    def update(self, val, val2):
+    def update(self, val, val2, val3, hou1m, h1):
         if house.image is None:
            house.image = pygame.image.load('hou.png')
            
@@ -47,15 +47,16 @@ class house1(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 50
         self.rect.y = 300
-    def update(self, val, val2):
+    def update(self, val, val2, val3, hou1m, h1):
         if house1.image is None:
            house1.image = pygame.image.load('hou.png')
            
         if val2 <= 0:
             self.image = house1.image
-        else:
+        elif val2 > 0 and h1 not in hou1m:
             self.image = pygame.image.load('redhou.png')
-        
+        elif h1 in hou1m and val2 > 0:
+            self.image = pygame.image.load('redhouselect.png')
 class house2(pygame.sprite.Sprite):
     image = None
     def __init__(self):
@@ -69,7 +70,7 @@ class house2(pygame.sprite.Sprite):
         self.rect.x = 240
         self.rect.y = 550
         if house2.image is None:
-            house2.image = pygame.image.load('hou.png')
+            house2.image = pygame.image.load('redhou.png')
         self.image = house2.image
 class house3(pygame.sprite.Sprite):
     image = None
@@ -83,9 +84,16 @@ class house3(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 240
         self.rect.y = 100
+    def update(self, val, val2, val3, hou1m, h1):
         if house3.image is None:
-            house3.image = pygame.image.load('bluehou.png')
-        self.image = house3.image
+           house3.image = pygame.image.load('bluehou.png')
+           
+        if val3 <= 0:
+            self.image = house3.image
+        else:
+            self.image = pygame.image.load('redhou.png')
+        
+
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
     return textSurface, textSurface.get_rect()
@@ -117,28 +125,28 @@ class button(pygame.sprite.Sprite):
         gdisplay.blit(btext, (405, 560))
         
 class zombieupright(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self,x,y):
         super().__init__()
         self.image = pygame.Surface([5, 10])
         self.image.fill(red)
         self.rect = self.image.get_rect()
-        self.rect.x = 370
-        self.rect.y = 550
+        self.rect.x = x
+        self.rect.y = y
 
-    def update(self, val, val2):
+    def update(self, val, val2, val3, hou1m, h1):
         self.rect.x += 1
         self.rect.y -= 3
 
 class zombieupleft(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self,x,y):
         super().__init__()
         self.image = pygame.Surface([5, 10])
         self.image.fill(red)
         self.rect = self.image.get_rect()
-        self.rect.x = 180
-        self.rect.y = 550
+        self.rect.x = x
+        self.rect.y = y
 
-    def update(self, val, val2):
+    def update(self, val, val2, val3, hou1m, h1):
         self.rect.x -= 1
         self.rect.y -= 3
         
@@ -183,9 +191,15 @@ def game(crashed):
     houses = pygame.sprite.Group()
     pop = 5
     pop1z = 0
+    pop3z = -5
     clicked = []
     hou2 = []
     hou1 = []
+    rightclick = []
+    hou2m = []
+    hou1m = []
+    hou3 = []
+    
     while crashed:
         gdisplay.fill(white)
         allsprites.add(h,h2,h1,h3)
@@ -207,42 +221,93 @@ def game(crashed):
         if 50+100 > mouse[0] > 50 and 300+50 > mouse[1] > 300 and h in clicked:
             if click == (1,0,0):
                 hou1.append(h1)
-                       
+        if 50+100 > mouse[0] > 50 and 300+50 > mouse[1] > 300 and h not in clicked:
+            if click == (1,0,0):
+                hou1m.append(h1)
+        if 240+100 > mouse[0] > 240 and 100+50 > mouse[1] > 100 and (h1 in hou1m or h2 in hou2m):
+            if click == (1,0,0):
+                hou3.append(h3)
+        
+        if 425+100 > mouse[0] > 425 and 300+50 > mouse[1] > 300 and h not in clicked:
+            if click == (1,0,0):
+                hou2m.append(h2)
+                
         if h in clicked and h2 in hou2:
             if milliseconds % 15 == 0 and pop > 0:
-                zomb = zombieupright()
+                zomb = zombieupright(350,550)
                 zombieg.add(zomb)
                 allsprites.add(zomb)
                 pop -= 1
         if h in clicked and h1 in hou1:
             if milliseconds % 15 == 0 and pop > 0:
-                zomb1 = zombieupleft()
+                zomb1 = zombieupleft(180,550)
                 zombieg.add(zomb1)
                 allsprites.add(zomb1)
                 pop -= 1
-        
-        
-        zombieg.update(pop2z, pop1z)
-        allsprites.update(pop2z, pop1z)
+        if h1 in hou1m and h3 in hou3:
+            if milliseconds % 15 == 0 and pop1z > 0:
+                zomb2 = zombieupright(200,300)
+                zombieg.add(zomb2)
+                allsprites.add(zomb2)
+                pop1z -= 1
+        if h2 in hou2m and h3 in hou3:
+            if milliseconds % 15 == 0 and pop2z > 0:
+                zomb3 = zombieupleft(360,300)
+                zombieg.add(zomb3)
+                allsprites.add(zomb3)
+                pop2z -= 1
+                
+        if click == (0,0,1):
+            if h in clicked:
+                clicked.pop()
+            if h1 in hou1:
+                hou1.pop()
+            if h2 in hou2:
+                hou2.pop()
+            if h1 in hou1m:
+                hou1m.pop()
+            if h3 in hou3:
+                hou3.pop()
+            if h2 in hou2m:
+                hou2m.pop()
+        zombieg.update(pop2z, pop1z, pop3z, hou1m, h1)
+        allsprites.update(pop2z, pop1z, pop3z, hou1m, h1)
         allsprites.draw(gdisplay)
         zombieg.draw(gdisplay)
         for zomb in zombieg:
+            allsprites.add(h,h1,h3)
             allsprites.remove(zomb)
-            allsprites.remove(h,h1)
+            allsprites.remove(h,h1,h3)
             if pygame.sprite.spritecollide(zomb, allsprites, False):
                 zombieg.remove(zomb)
                 allsprites.remove(zomb)
                 pop2z += 1
-                
+                     
         for zomb1 in zombieg:
-            allsprites.add(h,h1)
-            allsprites.remove(h,h2)
+            allsprites.add(h,h1,h3)
+            allsprites.remove(h,h2,h3)
             allsprites.remove(zomb1)
             if pygame.sprite.spritecollide(zomb1, allsprites, False):
                 zombieg.remove(zomb1)
                 allsprites.remove(zomb1)
                 pop1z += 1
                 
+        for zomb2 in zombieg:
+            allsprites.add(h,h1,h3)
+            allsprites.remove(h,h2,h1)
+            allsprites.remove(zomb2)
+            if pygame.sprite.spritecollide(zomb2, allsprites, False):
+                zombieg.remove(zomb2)
+                allsprites.remove(zomb2)
+                pop3z += 1
+        for zomb3 in zombieg:
+            allsprites.add(h,h1,h3)
+            allsprites.remove(h,h2,h1)
+            allsprites.remove(zomb3)
+            if pygame.sprite.spritecollide(zomb3, allsprites, False):
+                zombieg.remove(zomb3)
+                allsprites.remove(zomb3)
+                pop3z += 1               
         pygame.display.flip()
     clock.tick(60)
     
