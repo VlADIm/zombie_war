@@ -33,40 +33,6 @@ class zombie(pygame.sprite.Sprite):
             self.image = pygame.image.load(self.photo)
 
             
-class zombiedownright(pygame.sprite.Sprite):
-    image = None
-    def __init__(self,x,y):
-        super().__init__()
-        self.image = pygame.Surface([5, 10])
-        self.image.fill(red)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-
-    def update(self):
-        self.rect.x += 1
-        self.rect.y += 3
-        if zombieupright.image is None:
-            self.image = pygame.image.load('zombie.png')
-
-class zombieright(pygame.sprite.Sprite):
-    image = None
-    def __init__(self,x,y):
-        super().__init__()
-        self.image = pygame.Surface([5, 10])
-        self.image.fill(red)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-
-    def update(self):
-        self.rect.x += 1
-        self.rect.y -= 3
-        if zombieupright.image is None:
-            self.image = pygame.image.load('zombieup.png')
-
-
-            
 class house(pygame.sprite.Sprite):
     image = None
     def __init__(self, x, y, pop, h, lst, lst2):
