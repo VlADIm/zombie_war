@@ -72,12 +72,7 @@ class house(pygame.sprite.Sprite):
     
     def __str__(self):
         return '{} {} {}'.format(self.x, self.y, self.h)
-    
-def text_objects(text, font):
-    textSurface = font.render(text, True, black)
-    return textSurface, textSurface.get_rect()
-
-    
+        
 def button(text1, text2, text3):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
@@ -260,6 +255,16 @@ def level1():
         if pop > 0 and pop1z > 0 and pop2z > 0 and pop3z > 0:
             gdisplay.fill(white)
             return
+        
+        font = pygame.font.Font("freesansbold.ttf",20)
+        btext= font.render(str(pop), 1,(0,0,0))
+        gdisplay.blit(btext, (240, 550))
+        btext= font.render(str(pop1z), 1,(0,0,0))
+        gdisplay.blit(btext, (50,300))
+        btext= font.render(str(pop2z), 1,(0,0,0))
+        gdisplay.blit(btext, (425,300))
+        btext= font.render(str(pop3z), 1,(0,0,0))
+        gdisplay.blit(btext, (240,100))
         pygame.display.flip()
     clock.tick(60)
 
@@ -270,8 +275,8 @@ def level2():
     pop = 5
     pop1z = 0
     pop2z = 0
-    pop3z = 0
-    pop4z = -5
+    pop3z = -5
+    pop4z = 0
     hou = []
     hou2 = []
     clock = pygame.time.Clock()
@@ -384,7 +389,17 @@ def level2():
         if pop2z > 0:
             if count % 60 == 0:
                 pop2z += 1
-        
+        font = pygame.font.Font("freesansbold.ttf",20)
+        btext= font.render(str(pop), 1,(0,0,0))
+        gdisplay.blit(btext, (470, 50))
+        btext= font.render(str(pop1z), 1,(0,0,0))
+        gdisplay.blit(btext, (50,50))
+        btext= font.render(str(pop2z), 1,(0,0,0))
+        gdisplay.blit(btext, (260,260))
+        btext= font.render(str(pop3z), 1,(0,0,0))
+        gdisplay.blit(btext, (50,550))
+        btext= font.render(str(pop4z), 1,(0,0,0))
+        gdisplay.blit(btext, (470,550))
         zombieg.update()
         allsprites.draw(gdisplay)
         zombieg.draw(gdisplay)
