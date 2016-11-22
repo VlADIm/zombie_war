@@ -4,6 +4,7 @@ import random
 import sys
 import minigame
 
+
 pygame.init()
 gdisplay = pygame.display.set_mode((600,800))
 clock = pygame.time.Clock()
@@ -118,17 +119,19 @@ def start_screen():
         gdisplay.blit(scoretext, (150, 300))
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-        
+        effect = pygame.mixer.Sound('click.wav')
         button("Start", "Load Game",  None)
         if 155+100 > mouse[0] > 155 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
-               gdisplay.fill(white)
-               return
+                effect.play()
+                gdisplay.fill(white)
+                return
         pygame.display.update()
         clock.tick(60)
 
 def level1():
     bg = pygame.image.load("background.png")
+    effect = pygame.mixer.Sound('thump.wav')
     score = 0
     count = 0
     pop = 5
@@ -246,6 +249,7 @@ def level1():
                 if pygame.sprite.spritecollide(zomb, allsprites, False):
                     zombieg.remove(zomb)
                     allsprites.remove(zomb)
+                    effect.play()
                     if h1 in allsprites:
                         pop1z += 1
                     if h2 in allsprites:
@@ -266,6 +270,7 @@ def level1():
         btext= font.render(str(pop3z), 1,(0,0,0))
         gdisplay.blit(btext, (240,100))
         pygame.display.flip()
+        
     clock.tick(60)
 
 def level2():
@@ -434,7 +439,7 @@ def btwlevel():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
+        effect = pygame.mixer.Sound('click.wav')
         gdisplay.fill(white)
         font=pygame.font.Font(None,90)
         scoretext=font.render("Level Complete", 10,(0,0,0))
@@ -445,14 +450,17 @@ def btwlevel():
         button("Next Level", "Exit", "Minigame")
         if 155+100 > mouse[0] > 155 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
+                effect.play()
                 gdisplay.fill(white)
                 return
         if 400+100 > mouse[0] > 400 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
+                effect.play()
                 pygame.quit()
                 sys.exit()
         if 275+100 > mouse[0] > 275 and 600+50 > mouse[1] > 600:
             if click == (1,0,0):
+                effect.play()
                 minigame.playminigame()
                 return
         pygame.display.update()
