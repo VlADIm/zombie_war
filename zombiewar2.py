@@ -467,10 +467,13 @@ def btwlevel():
         clock.tick(60)
 
 def main():
+    music = pygame.mixer.Sound('star.wav')
+    music.play(loops=-1)
     start_screen()
     level1()
     btwlevel()
     level2()
+    btwlevel()
     pygame.quit()
     exit()
 main()
