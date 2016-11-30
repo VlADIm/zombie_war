@@ -1,0 +1,20 @@
+{
+    "john": {
+        "speed": 5,
+        "r_rate": 2,
+        "strength": 4,
+        "level": 1
+    },
+    "carl": {
+        "speed": 1,
+        "r_rate": 1,
+        "strength": 1,
+        "level": 1
+    },
+    "evan": {
+        "speed": 1,
+        "r_rate": 2,
+        "strength": 1,
+        "level": 1
+    }
+}

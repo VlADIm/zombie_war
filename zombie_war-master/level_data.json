@@ -1,0 +1,45 @@
+{
+    "level_1": {
+
+      "h1": {
+
+        "x":450,
+        "y":150,
+        "player_pop":5,
+        "player_control":"Player 1",
+        "connections":["h2","h3"]
+
+      },
+
+      "h2": {
+
+        "x":225,
+        "y":300,
+        "player_pop":5,
+        "player_control":"Neutral",
+        "connections":["h1","h4"]
+
+      },
+
+      "h3": {
+
+        "x":675,
+        "y":300,
+        "player_pop":5,
+        "player_control":"Neutral",
+        "connections":["h1","h4"]
+
+      },
+
+      "h4": {
+
+        "x":450,
+        "y":450,
+        "player_pop":5,
+        "player_control":"Player 2",
+        "connections":["h2","h3"]
+
+      }
+
+    }
+}
