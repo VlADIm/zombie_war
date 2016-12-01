@@ -2,6 +2,7 @@ import pygame
 import button
 import game
 import sys
+import level_screen
 
 
 pygame.init()
@@ -44,11 +45,12 @@ class load_save_screen(pygame.sprite.Sprite):
                         if(self.button.next() == True):
                             selected_save = game.Game(self.button.text)
                             game_data = selected_save.loadGame()
+                            print(game_data)
 
                             effect.play()
                             gdisplay.fill(white)
 
-                            # new screen here
+                            level_screen.level_screen(selected_save.save)
 
                     pygame.display.flip()
 

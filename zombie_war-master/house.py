@@ -7,8 +7,9 @@ clock = pygame.time.Clock()
 
 class House(pygame.sprite.Sprite):
     image = None
-    def __init__(self, x_coor, y_coor, player_pop, player_control, connections):
+    def __init__(self, house_name, x_coor, y_coor, player_pop, player_control, connections):
         super().__init__()
+        self.house_name = house_name
         self.x_coor = x_coor
         self.y_coor = y_coor
         self.player_pop = player_pop
@@ -31,5 +32,7 @@ class House(pygame.sprite.Sprite):
         if(self.player_control != 'Neutral'):
             self.player_pop += 1
 
-    def __str__(self):
-        return '{} {} {}'.format(self.x, self.y, self.h)
+
+    
+    # def __str__(self):
+    #     return '{} {} {}'.format(self.x, self.y, self.h)

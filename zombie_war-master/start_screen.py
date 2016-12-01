@@ -6,6 +6,7 @@ import random
 import sys
 import minigame
 import game
+# import level_screen
 
 pygame.init()
 
@@ -48,8 +49,8 @@ class start_screen(pygame.sprite.Sprite):
                         new_save = {"strength": 1, "r_rate": 1, "speed": 1, "level": 1}
                         name = game.Game(name)
                         name.saveGame(new_save)
-                        game_data = game.game.Game()
-                        # new screen here
+                        game_data = {name: new_save}
+                        # level_screen.level_screen(game_data)
 
                     if(self.button2.next() == True):
                         effect.play()

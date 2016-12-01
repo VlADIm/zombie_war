@@ -54,17 +54,21 @@ class Game:
         value = info.get(improvement) + 1 #this needs to be fixed
         self.saveGame(info)
 
-    def housePositions(self):
+    def housePositions(self, names = None):
         """
         Parameters: self (the objects name)
         Function: Opens the level_data.json file and returns the values of the houses as a list
         """
-        houses = self.loadGame()
+        current_level = self.loadGame().get(self.save).get('level')
         json_dict = json.loads(open("level_data.json","r").read())
-        houses = json_dict.get("level_" + str(houses.get("level")))
+        houses = json_dict.get("level_" + str(current_level))
         house_list = []
+
+        if(names == 'names'):
+            return house_list
+
         for i in houses:
             single_house = houses.get(i)
-            single_house = house.House(single_house.get('x'), single_house.get('y'), single_house.get('player_pop'), single_house.get('player_control'), single_house.get('connections'))
+            single_house = house.House(i, single_house.get('x'), single_house.get('y'), single_house.get('player_pop'), single_house.get('player_control'), single_house.get('connections'))
             house_list.append(single_house)
         return house_list
