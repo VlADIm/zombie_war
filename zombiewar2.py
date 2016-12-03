@@ -39,8 +39,6 @@ class house(pygame.sprite.Sprite):
     def __init__(self, x, y, pop, h, lst, lst2):
         super().__init__()
         
-        mouse = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
         self.image = pygame.Surface([100, 100])
         self.image.fill(black)
  
@@ -128,7 +126,55 @@ def start_screen():
                 return
         pygame.display.update()
         clock.tick(60)
-
+        
+class controller():
+    def __init__(self, houses2, hou, hou2):
+        self.houses2= houses2
+        self.hou = hou
+        self.hou2 = hou2
+        
+    def checkquit(self):
+        for event in pygame.event.get():
+            if (event.type == pygame.QUIT):
+                pygame.quit()
+                sys.exit()
+                
+    def houseselect(self):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        for i in range(len(self.houses2)):
+            stuff = str(self.houses2[i])
+            stuff = stuff.split()
+            x = int(stuff[0])
+            y = int(stuff[1])
+            name = stuff[2]
+            i2 = i+1
+            if i2 >= 4:
+                i2 = 0
+            stuff2 = str(self.houses2[i2])
+            stuff2 = stuff2.split()
+            x2 = int(stuff[0])
+            y2 = int(stuff[1])
+            name2 = stuff[2]
+        
+            if x+100 > mouse[0] > x and y+200 > mouse[1] > y:
+                if click == (1,0,0):
+                    self.hou.append(name)
+            if x2+100 > mouse[0] > x2 and y2+200 > mouse[1] > y2 and name in self.hou:
+                if click == (1,0,0):
+                    self.hou2.append(name2)
+    def housedeselect(self):
+        click = pygame.mouse.get_pressed()
+        for i in range(len(self.houses2)):
+            if click == (0,0,1):
+                stuff = str(self.houses2[i])
+                stuff = stuff.split()
+                name = stuff[2]
+                if name in self.hou:
+                    self.hou.remove(name)
+                if name in self.hou2:
+                    self.hou2.remove(name)
+        
 def level1():
     bg = pygame.image.load("background.png")
     effect = pygame.mixer.Sound('thump.wav')
@@ -150,6 +196,7 @@ def level1():
     h3 = house(240, 100, pop3z, 'h3', hou, hou2)
     houses = [h1,h2,h3]
     houses2 = [h,h1,h2,h3]
+    control = controller(houses2, hou, hou2)
     while crashed:
         count += 1
         gdisplay.fill(white)
@@ -161,34 +208,11 @@ def level1():
         allsprites.add(h1,h2,h,h3)
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-        for event in pygame.event.get():
-            if (event.type == pygame.QUIT):
-                pygame.quit()
-                sys.exit()
-                crashed = False
-        for i in range(len(houses2)):
-            stuff = str(houses2[i])
-            stuff = stuff.split()
-            x = int(stuff[0])
-            y = int(stuff[1])
-            name = stuff[2]
-            i2 = i+1
-            if i2 >= 4:
-                i2 = 0
-            stuff2 = str(houses2[i2])
-            stuff2 = stuff2.split()
-            x2 = int(stuff[0])
-            y2 = int(stuff[1])
-            name2 = stuff[2]
+                
+        control.checkquit()
+        control.houseselect()
+        control.housedeselect()
         
-            if x+100 > mouse[0] > x and y+200 > mouse[1] > y:
-                if click == (1,0,0):
-                    hou.append(name)
-            if x2+100 > mouse[0] > x2 and y2+200 > mouse[1] > y2 and name in hou:
-                if click == (1,0,0):
-                    hou2.append(name2)
-       
-     
         if 'h' in hou and 'h2' in hou2:
             if count % 30 == 0 and pop > 1:
                 zomb = zombie(350,550, 1, -3,'zombieup.png')
@@ -216,15 +240,6 @@ def level1():
                 allsprites.add(zomb3)
                 pop2z -= 1
                 
-        for i in range(len(houses2)):
-            if click == (0,0,1):
-                stuff = str(houses2[i])
-                stuff = stuff.split()
-                name = stuff[2]
-                if name in hou:
-                    hou.remove(name)
-                if name in hou2:
-                    hou2.remove(name)
    
         if pop > 0:
             if count % 60 == 0:
