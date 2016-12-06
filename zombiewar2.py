@@ -5,6 +5,7 @@ import sys
 import minigame
 import game
 import load_save_screen
+import inputbox
 
 pygame.init()
 gdisplay = pygame.display.set_mode((600,800))
@@ -133,7 +134,10 @@ def start_screen():
             if click == (1,0,0):
                 effect.play()
                 gdisplay.fill(white)
-                name1 = input("Please enter a four character save name: ")
+                name1 = inputbox.ask(gdisplay, "Please enter a four character save name")
+                if len(name1) > 4:
+                    name1 = name1[0:4]
+                print(name1)
                 new_save = {"level": 1}
                 name = game.Game(name1)
                 name.saveGame(new_save)
