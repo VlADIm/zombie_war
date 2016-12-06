@@ -3,7 +3,8 @@ import time
 import random
 import sys
 import minigame
-
+import game
+import load_save_screen
 
 pygame.init()
 gdisplay = pygame.display.set_mode((600,800))
@@ -124,6 +125,16 @@ def start_screen():
                 effect.play()
                 gdisplay.fill(white)
                 return
+        if 400+100 > mouse[0] > 400 and 550+50 > mouse[1] > 550:
+            if click == (1,0,0):
+                effect.play()
+                gdisplay.fill(white)
+                name = input("Please enter a four character save name: ")
+                new_save = {"strength": 1, "r_rate": 1, "speed": 1, "level": 1}
+                name = game.Game(name)
+                name.saveGame(new_save)
+                game_data = game.Game(name)
+                load_save_screen.load_save_screen()
         pygame.display.update()
         clock.tick(60)
         
