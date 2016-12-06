@@ -73,7 +73,7 @@ class house(pygame.sprite.Sprite):
     def __str__(self):
         return '{} {} {}'.format(self.x, self.y, self.h)
         
-def button(text1, text2, text3):
+def button(text1, text2, text3, text4):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if 150+100 > mouse[0] > 150 and 550+50 > mouse[1] > 550:
@@ -103,6 +103,15 @@ def button(text1, text2, text3):
         font3 = pygame.font.Font("freesansbold.ttf",20)
         btext= font3.render(text3, 1,(0,0,0))
         gdisplay.blit(btext, (280, 610))
+        
+    if text4 != None:
+        if 275+100 > mouse[0] > 275 and 500+50 > mouse[1] > 500:
+            pygame.draw.rect(gdisplay, red, (270,500, 130, 60))
+        else:
+            pygame.draw.rect(gdisplay, lightred, (275,500, 120, 50))
+        font3 = pygame.font.Font("freesansbold.ttf",20)
+        btext= font3.render(text4, 1,(0,0,0))
+        gdisplay.blit(btext, (280, 500))
     
 def start_screen():
     intro = True
@@ -119,22 +128,24 @@ def start_screen():
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         effect = pygame.mixer.Sound('click.wav')
-        button("Start", "Load Game",  None)
+        button("Start", "Load Game",  None, None)
         if 155+100 > mouse[0] > 155 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
                 effect.play()
                 gdisplay.fill(white)
-                return
+                name1 = input("Please enter a four character save name: ")
+                new_save = {"level": 1}
+                name = game.Game(name1)
+                name.saveGame(new_save)
+                game_data = game.Game(name)
+                return 'level1', name1
         if 400+100 > mouse[0] > 400 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
                 effect.play()
                 gdisplay.fill(white)
-                name = input("Please enter a four character save name: ")
-                new_save = {"strength": 1, "r_rate": 1, "speed": 1, "level": 1}
-                name = game.Game(name)
-                name.saveGame(new_save)
-                game_data = game.Game(name)
-                load_save_screen.load_save_screen()
+                a = load_save_screen.load_save_screen()
+                b = a.load()
+                return b
         pygame.display.update()
         clock.tick(60)
         
@@ -458,7 +469,7 @@ def level2():
         pygame.display.flip()
     clock.tick(60)
     
-def btwlevel():
+def btwlevel(name1):
     running = True
     while running:
         for event in pygame.event.get():
@@ -473,7 +484,7 @@ def btwlevel():
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         
-        button("Next Level", "Exit", "Minigame")
+        button("Next Level", "Exit", "Minigame", "Save")
         if 155+100 > mouse[0] > 155 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
                 effect.play()
@@ -489,17 +500,30 @@ def btwlevel():
                 effect.play()
                 minigame.playminigame()
                 return
+        if 275+100 > mouse[0] > 275 and 500+50 > mouse[1] > 500:
+            if click == (1,0,0):
+                effect.play()
+                save = {"level": 2}
+                name = game.Game(name1)
+                print(name1)
+                name.saveGame(save)
+                game_data = game.Game(name)
+                print("game saved")
         pygame.display.update()
         clock.tick(60)
 
 def main():
     music = pygame.mixer.Sound('star.wav')
     music.play(loops=-1)
-    start_screen()
-    level1()
-    btwlevel()
+    start = start_screen()
+    print(start)
+    if 'level1' in start:
+        level1()
+        btwlevel(start[1])
+    elif 'level2' in start:
+        level2()
     level2()
-    btwlevel()
+    btwlevel(start[1])
     pygame.quit()
     exit()
 main()

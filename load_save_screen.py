@@ -17,12 +17,15 @@ blue = (0,0,255)
 class load_save_screen(pygame.sprite.Sprite):
 
     def __init__(self):
+        self.x = 1
+
+    def load(self):
         while True:
             for event in pygame.event.get():
 
                 all_saves = game.Game('all')
                 saves = all_saves.loadGame()
-
+    
                 if(event.type == pygame.QUIT):
                     pygame.quit()
                     sys.exit()
@@ -51,8 +54,13 @@ class load_save_screen(pygame.sprite.Sprite):
 
                             effect.play()
                             gdisplay.fill(white)
+                            player = game_data[self.button.text]
+                            if player['level'] == 1:
+                                return "level1", self.button.text
+                            if player['level'] == 2:
+                                return "level2", self.button.text
 
-                            # new screen here
+                            
 
                     pygame.display.flip()
 

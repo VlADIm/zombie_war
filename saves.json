@@ -1,12 +1,12 @@
 {
     "john": {
-        "strength": 4,
-        "r_rate": 2,
-        "speed": 5
+        "level": 1
     },
     "evan": {
-        "strength": 1,
-        "r_rate": 2,
-        "speed": 1
+        "level": 2
+    },
+    "just": {
+        "level": 2
     }
+    
 }
