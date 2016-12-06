@@ -12,18 +12,19 @@ def get_key():
 def display_box(screen, message):
   "Print a message in a box in the middle of the screen"
   fontobject = pygame.font.Font(None,18)
-
+  bg = pygame.image.load("background.png")
+  screen.blit(bg, (0,0))
   pygame.draw.rect(screen, (0,0,0),
-                   ((screen.get_width() / 2) - 100,
-                    (screen.get_height() / 2) - 10,
-                    300,150), 0)
+                   ((screen.get_width() / 2) - 150,
+                    (screen.get_height() / 2) - 40,
+                    350,80), 0)
   pygame.draw.rect(screen, (255,255,255),
-                   ((screen.get_width() / 2) - 102,
-                    (screen.get_height() / 2) - 12,
-                    300,150), 1)
+                   ((screen.get_width() / 2) - 152,
+                    (screen.get_height() / 2) - 42,
+                    350,80), 1)
   if len(message) != 0:
     screen.blit(fontobject.render(message, 1, (255,255,255)),
-                ((screen.get_width() / 2) - 100, (screen.get_height() / 2) - 10))
+                ((screen.get_width() / 2) - 150, (screen.get_height() / 2) - 40))
   pygame.display.flip()
 
 def ask(screen, question):
@@ -45,7 +46,7 @@ def ask(screen, question):
   return "".join(current_string)
 
 def main():
-  screen = pygame.display.set_mode((320,240))
+  screen = pygame.display.set_mode((600,800))
   print (ask(screen, "Name") + " was entered")
 
 if __name__ == '__main__': main()
