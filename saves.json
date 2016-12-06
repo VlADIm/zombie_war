@@ -2,11 +2,10 @@
     "john": {
         "level": 1
     },
-    "evan": {
-        "level": 2
-    },
     "just": {
+        "level": 1
+    },
+    "carl": {
         "level": 2
     }
-    
 }
