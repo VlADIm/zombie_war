@@ -41,7 +41,8 @@ class load_save_screen(pygame.sprite.Sprite):
                     for i in saves:
                         if x_coordinate > 550:
                             x_coordinate = 125
-                            y_coordinate = 350
+                            y_coordinate += 100
+    
                         self.button = button.Button(i, x_coordinate, y_coordinate)
                         self.buttons(self.button)
                         x_coordinate += 150
