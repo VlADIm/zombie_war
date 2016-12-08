@@ -116,6 +116,7 @@ def button(text1, text2, text3, text4):
     
 def start_screen():
     intro = True
+    bg = pygame.image.load("city2.png")
     while intro:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -123,8 +124,9 @@ def start_screen():
                 sys.exit()
 
         gdisplay.fill(white)
+        gdisplay.blit(bg, (0,0))
         font=pygame.font.Font(None,90)
-        scoretext=font.render("Zombie War", 10,(0,0,0))
+        scoretext=font.render("Zombie War", 10,(255,0,0))
         gdisplay.blit(scoretext, (150, 300))
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
