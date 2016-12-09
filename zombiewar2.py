@@ -17,6 +17,8 @@ lightred = (250,0,0)
 blue = (0,0,255)
 pygame.display.set_caption("Zombie War")
 
+
+
 class zombie(pygame.sprite.Sprite):
     image = None
     def __init__(self,x,y, x2, y2, photo):
@@ -30,6 +32,7 @@ class zombie(pygame.sprite.Sprite):
         self.x2 = x2
         self.y2 = y2
     def update(self):
+        """updates the zombies coordinates to make it move across the screen"""
         self.rect.x += self.x2
         self.rect.y += self.y2
         if zombie.image is None:
@@ -38,7 +41,7 @@ class zombie(pygame.sprite.Sprite):
             
 class house(pygame.sprite.Sprite):
     image = None
-    def __init__(self, x, y, pop, h, lst, lst2):
+    def __init__(self, x, y, pop, name, lst, lst2):
         super().__init__()
         
         self.image = pygame.Surface([100, 100])
@@ -50,12 +53,13 @@ class house(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.pop = pop
-        self.h = h
+        self.name = name
         self.lst = lst
         self.lst2 = lst2
 
         
     def update(self, pop1):
+        """updates the image of the house. When the population is 0 the house is black, when its > 0 its red."""
         self.pop1 = pop1
         if house.image is None:
            house.image = pygame.image.load('hou.png')
@@ -63,18 +67,20 @@ class house(pygame.sprite.Sprite):
         if pop1 <= 0:
             self.image = house.image
 
-        elif pop1 > 0 and self.h not in self.lst2:
+        elif pop1 > 0 and self.name not in self.lst2:
             self.image = pygame.image.load('redhou.png')
             
-        elif self.h in self.lst2 and pop1 > 0:
+        elif self.name in self.lst2 and pop1 > 0:
             self.image = pygame.image.load('redhouselect.png')
             
         return self.pop1
     
     def __str__(self):
-        return '{} {} {}'.format(self.x, self.y, self.h)
+        """returns the x and y vaues as well as the name of the house"""
+        return '{} {} {}'.format(self.x, self.y, self.name)
         
 def button(text1, text2, text3, text4):
+    """draws a button on the screen with the text as parameters"""
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if 150+100 > mouse[0] > 150 and 550+50 > mouse[1] > 550:
@@ -131,7 +137,8 @@ def start_screen():
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         effect = pygame.mixer.Sound('click.wav')
-        button("Start", "Load Game",  None, None)
+        button("New Game", "Load Game",  None, None)
+        """if the button is clicked then the user is prompted to enter a name for the save file"""
         if 155+100 > mouse[0] > 155 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
                 effect.play()
@@ -145,6 +152,7 @@ def start_screen():
                 name.saveGame(new_save)
                 game_data = game.Game(name)
                 return 'level1', name1
+        """if the button is clicked the load game screen appears"""
         if 400+100 > mouse[0] > 400 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
                 effect.play()
@@ -154,54 +162,6 @@ def start_screen():
                 return b
         pygame.display.update()
         clock.tick(60)
-        
-class controller():
-    def __init__(self, houses2, hou, hou2):
-        self.houses2= houses2
-        self.hou = hou
-        self.hou2 = hou2
-        
-    def checkquit(self):
-        for event in pygame.event.get():
-            if (event.type == pygame.QUIT):
-                pygame.quit()
-                sys.exit()
-                
-    def houseselect(self):
-        mouse = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
-        for i in range(len(self.houses2)):
-            stuff = str(self.houses2[i])
-            stuff = stuff.split()
-            x = int(stuff[0])
-            y = int(stuff[1])
-            name = stuff[2]
-            i2 = i+1
-            if i2 >= 4:
-                i2 = 0
-            stuff2 = str(self.houses2[i2])
-            stuff2 = stuff2.split()
-            x2 = int(stuff[0])
-            y2 = int(stuff[1])
-            name2 = stuff[2]
-        
-            if x+100 > mouse[0] > x and y+200 > mouse[1] > y:
-                if click == (1,0,0):
-                    self.hou.append(name)
-            if x2+100 > mouse[0] > x2 and y2+200 > mouse[1] > y2 and name in self.hou:
-                if click == (1,0,0):
-                    self.hou2.append(name2)
-    def housedeselect(self):
-        click = pygame.mouse.get_pressed()
-        for i in range(len(self.houses2)):
-            if click == (0,0,1):
-                stuff = str(self.houses2[i])
-                stuff = stuff.split()
-                name = stuff[2]
-                if name in self.hou:
-                    self.hou.remove(name)
-                if name in self.hou2:
-                    self.hou2.remove(name)
         
 def level1():
     bg = pygame.image.load("background.png")
@@ -224,8 +184,9 @@ def level1():
     h3 = house(240, 100, pop3z, 'h3', hou, hou2)
     houses = [h1,h2,h3]
     houses2 = [h,h1,h2,h3]
-    control = controller(houses2, hou, hou2)
     while crashed:
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
         count += 1
         gdisplay.fill(white)
         gdisplay.blit(bg, (0,0))
@@ -237,10 +198,35 @@ def level1():
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
                 
-        control.checkquit()
-        control.houseselect()
-        control.housedeselect()
+        for event in pygame.event.get():
+            if (event.type == pygame.QUIT):
+                pygame.quit()
+                sys.exit()
+                crashed = False
+                
+        for i in range(len(houses2)):
+            stuff = str(houses2[i])
+            stuff = stuff.split()
+            x = int(stuff[0])
+            y = int(stuff[1])
+            name = stuff[2]
+            i2 = i+1
+            if i2 >= 4:
+                i2 = 0
+            stuff2 = str(houses2[i2])
+            stuff2 = stuff2.split()
+            x2 = int(stuff[0])
+            y2 = int(stuff[1])
+            name2 = stuff[2]
         
+            if x+100 > mouse[0] > x and y+200 > mouse[1] > y:
+                if click == (1,0,0):
+                    hou.append(name)
+            if x2+100 > mouse[0] > x2 and y2+200 > mouse[1] > y2 and name in hou:
+                if click == (1,0,0):
+                    hou2.append(name2)
+                    
+        """if a certain house is clicked while another house is selected it will send zombies to that house"""
         if 'h' in hou and 'h2' in hou2:
             if count % 30 == 0 and pop > 1:
                 zomb = zombie(350,550, 1, -3,'zombieup.png')
@@ -268,7 +254,17 @@ def level1():
                 allsprites.add(zomb3)
                 pop2z -= 1
                 
-   
+        for i in range(len(houses2)):
+            if click == (0,0,1):
+                stuff = str(houses2[i])
+                stuff = stuff.split()
+                name = stuff[2]
+                if name in hou:
+                    hou.remove(name)
+                if name in hou2:
+                    hou2.remove(name)
+                    
+        """population increases by 1 every time the count is divisible by 60 without a remainder"""
         if pop > 0:
             if count % 60 == 0:
                 pop += 1
@@ -282,7 +278,8 @@ def level1():
         zombieg.update()
         allsprites.draw(gdisplay)
         zombieg.draw(gdisplay)
-
+        
+        """when the zombie collides with a house the population of that house increases and the zombie is removed from the screen"""
         for zomb in zombieg:
             for i in houses:
                 allsprites.add(h,h1,h2,h3)
@@ -299,10 +296,11 @@ def level1():
                         pop2z += 1
                     if h3 in allsprites:
                         pop3z += 1
+        """if the population of ecery house is greater than zero then the level is complete"""                       
         if pop > 0 and pop1z > 0 and pop2z > 0 and pop3z > 0:
             gdisplay.fill(white)
             return
-        
+        """adds the population count for each house to the screen"""
         font = pygame.font.Font("freesansbold.ttf",20)
         btext= font.render(str(pop), 1,(0,0,0))
         gdisplay.blit(btext, (240, 550))
@@ -477,6 +475,8 @@ def level2():
     
 def btwlevel(name1):
     running = True
+    bg = pygame.image.load("background.png")
+    savedtext= 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -484,12 +484,12 @@ def btwlevel(name1):
                 sys.exit()
         effect = pygame.mixer.Sound('click.wav')
         gdisplay.fill(white)
+        gdisplay.blit(bg, (0,0))
         font=pygame.font.Font(None,90)
         scoretext=font.render("Level Complete", 10,(0,0,0))
         gdisplay.blit(scoretext, (100, 300))
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-        
         button("Next Level", "Exit", "Minigame", "Save")
         if 155+100 > mouse[0] > 155 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
@@ -514,10 +514,36 @@ def btwlevel(name1):
                 print(name1)
                 name.saveGame(save)
                 game_data = game.Game(name)
+                font=pygame.font.Font(None,30)
+                savedtext=font.render("Game saved", 10,(0,0,0))
                 print("game saved")
+        if savedtext!= 0:
+            gdisplay.blit(savedtext, (200, 400))              
         pygame.display.update()
         clock.tick(60)
-
+        
+def endscreen():
+    running = True
+    bg = pygame.image.load("background.png")
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        gdisplay.fill(white)
+        gdisplay.blit(bg, (0,0))
+        font=pygame.font.Font(None,90)
+        scoretext=font.render("Game Complete!", 10,(0,0,0))
+        gdisplay.blit(scoretext, (70, 300))
+        font=pygame.font.Font(None,60)
+        scoretext=font.render("Thanks for playing!", 10,(0,0,0))
+        gdisplay.blit(scoretext, (100, 350))
+        font=pygame.font.Font(None,35)
+        scoretext=font.render("Created by Justin Diaz and Vladimir Malcevic", 10,(0,0,0))
+        gdisplay.blit(scoretext, (30, 500))
+        pygame.display.update()
+        clock.tick(60)
+        
 def main():
     music = pygame.mixer.Sound('star.wav')
     music.play(loops=-1)
@@ -528,8 +554,7 @@ def main():
         btwlevel(start[1])
     elif 'level2' in start:
         level2()
-    level2()
-    btwlevel(start[1])
+    endscreen()
     pygame.quit()
     exit()
 main()
