@@ -469,7 +469,7 @@ def level2():
                         pop4z += 1
         if pop > 0 and pop1z > 0 and pop2z > 0 and pop3z > 0 and pop4z > 0:
             gdisplay.fill(white)
-            return
+            endscreen()
         pygame.display.flip()
     clock.tick(60)
     
@@ -495,7 +495,7 @@ def btwlevel(name1):
             if click == (1,0,0):
                 effect.play()
                 gdisplay.fill(white)
-                return
+                level2()
         if 400+100 > mouse[0] > 400 and 550+50 > mouse[1] > 550:
             if click == (1,0,0):
                 effect.play()
@@ -552,9 +552,9 @@ def main():
     if 'level1' in start:
         level1()
         btwlevel(start[1])
+        level2()
     elif 'level2' in start:
         level2()
-    endscreen()
     pygame.quit()
     exit()
 main()
